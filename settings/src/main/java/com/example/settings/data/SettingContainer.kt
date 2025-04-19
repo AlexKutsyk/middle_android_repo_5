@@ -1,4 +1,4 @@
-package com.yandex.practicum.middle_homework_5.data.data_store
+package com.example.settings.data
 
 data class SettingContainer (
     val periodic: Long,

@@ -1,4 +1,4 @@
-package com.yandex.practicum.middle_homework_5.ui.screen
+package com.example.settings.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,18 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.yandex.practicum.middle_homework_5.R
-import com.yandex.practicum.middle_homework_5.data.data_store.SettingContainer.Companion.DEFAULT_REFRESH_PERIOD
-import com.yandex.practicum.middle_homework_5.data.data_store.SettingContainer.Companion.FIST_LAUNCH_DELAY
-import com.yandex.practicum.middle_homework_5.ui.AppViewModel
+import com.example.settings.R
+import com.example.settings.data.SettingContainer.Companion.DEFAULT_REFRESH_PERIOD
+import com.example.settings.data.SettingContainer.Companion.FIST_LAUNCH_DELAY
 import org.koin.androidx.compose.koinViewModel
+import com.example.settings.presentation.SettingsViewModel
 
 @Composable
 fun SettingScreen(
     modifier: Modifier = Modifier,
-    appViewModel: AppViewModel = koinViewModel()
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
-    val currentSetting = appViewModel.getCurrentSetting()
+    val currentSetting = viewModel.getCurrentSetting()
     var periodic by rememberSaveable { mutableStateOf(currentSetting.periodic.toString()) }
     var delayed by rememberSaveable { mutableStateOf(currentSetting.delayed.toString()) }
     Column(
@@ -64,7 +64,7 @@ fun SettingScreen(
         Button(onClick = {
             val periodicValue = periodic.toLongOrNull() ?: DEFAULT_REFRESH_PERIOD
             val delayValue = delayed.toLongOrNull() ?: FIST_LAUNCH_DELAY
-            appViewModel.saveSetting(periodic = periodicValue, delayed = delayValue)
+            viewModel.saveSetting(periodic = periodicValue, delayed = delayValue)
         }) {
             Text(stringResource(R.string.save_setting))
         }
