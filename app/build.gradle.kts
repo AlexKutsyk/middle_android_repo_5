@@ -7,16 +7,16 @@ plugins {
 
 }
 
-tasks.preBuild {
-    dependsOn("untranslatedStrings")
-}
+//tasks.preBuild {
+//    dependsOn("untranslatedStrings")
+//}
 
 android {
     namespace = "com.yandex.practicum.middle_homework_5"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "com.yandex.practicum.middle_homework_5"
-        minSdk = 24
+        minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
