@@ -15,7 +15,7 @@ abstract class FindUntranslatedStringsTask : DefaultTask() {
             file.isDirectory && file.name.startsWith(DEFAULT_DIR_NAME)
         }
         var defaultStringResList: List<String> = listOf()
-        var missingStrings: MutableMap<String, List<String>> = mutableMapOf()
+        val missingStrings: MutableMap<String, List<String>> = mutableMapOf()
 
         valuesDirs?.forEach { dir ->
             val strings = File(resDir, dir.name + FILE_NAME)
@@ -24,15 +24,10 @@ abstract class FindUntranslatedStringsTask : DefaultTask() {
             if (dir.name == DEFAULT_DIR_NAME) {
                 defaultStringResList = stringIdentities
             } else {
-                findDiffList(
-                    dir.name,
-                    defaultStringResList,
-                    stringIdentities,
-                    missingStrings
-                )
+                missingStrings[dir.name] = findDiffList(defaultStringResList, stringIdentities)
             }
         }
-        buildError(missingStrings)
+        handleError(missingStrings)
     }
 
     private fun parseNamesStringRes(stringsFromXml: NodeList): List<String> {
@@ -55,20 +50,17 @@ abstract class FindUntranslatedStringsTask : DefaultTask() {
     }
 
     private fun findDiffList(
-        stringResDirName: String,
         defaultList: List<String>,
         applicantList: List<String>,
-        missingStringsMap: MutableMap<String, List<String>>
-    ): MutableMap<String, List<String>> {
+    ): List<String> {
         val missingStringsList = mutableListOf<String>()
         defaultList.forEach { itemString ->
             if (!applicantList.contains(itemString)) missingStringsList.add(itemString)
         }
-        missingStringsMap[stringResDirName] = missingStringsList.toList()
-        return missingStringsMap
+        return missingStringsList
     }
 
-    private fun buildError(missingStrings: MutableMap<String, List<String>>) {
+    private fun handleError(missingStrings: Map<String, List<String>>) {
         if (missingStrings.isNotEmpty()) {
             val stringBuilderErrorText =
                 StringBuilder(ERROR_TITLE).append(System.lineSeparator())
